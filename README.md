@@ -1,6 +1,20 @@
 # aws_handler
 
-## python
+
+## About
+
+> Python aws simple handler
+
+
+## Prepare
+
+```bash
+# install aws official api
+pip install boto3
+```
+
+
+## Usage
 
 ```python
 
