@@ -21,7 +21,7 @@ pip install boto3
 from aws_handler.handler import S3
 
 
-s3 = S3("seohasong", "~/SEOHASONG/conf/key/rootkey.csv")
+s3 = S3("BUCKET_NAME", "ACCESS_KEY_PATH")
 
 s3.put_pickle("test0", range(10))
 s3.put_pickle("test1", range(10))
