@@ -3,7 +3,7 @@
 
 ## About
 
-> Python aws simple handler
+> Simple handler for Amazon web service by python
 
 
 ## Prepare
