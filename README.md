@@ -9,7 +9,7 @@
 ## Prepare
 
 ```bash
-# install aws official api
+# install AWS official api
 pip install boto3
 ```
 
