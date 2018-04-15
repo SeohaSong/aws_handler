@@ -6,7 +6,7 @@ import os
 import boto3
 
 
-AWS_CREDENTIAL = """
+AWS_CREDENTIAL_TEXT = """
 [default]
 aws_access_key_id = AWS_ACCESS_KEY_ID
 aws_secret_access_key = AWS_SECRET_ACCESS_KEY
@@ -27,13 +27,17 @@ class S3():
     def _set_access_key(self, key_path):
 
         key_path = os.path.expanduser(key_path)
+
         aws_credential_path = os.path.expanduser("~/.aws/credentials")
+        aws_dir = os.path.split(aws_credential_path)[0]
+        if not os.path.isdir(aws_dir):
+            os.makedirs(aws_dir)
 
         df = pd.read_csv(key_path, header=None)
         (id_, key) = (df.iloc[0, 0].split("=")[1],
                       df.iloc[1, 0].split("=")[1])
 
-        content = AWS_CREDENTIAL
+        content = AWS_CREDENTIAL_TEXT
         content = content.replace("AWS_ACCESS_KEY_ID", id_)
         content = content.replace("AWS_SECRET_ACCESS_KEY", key)
 
