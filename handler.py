@@ -33,9 +33,13 @@ class S3():
         if not os.path.isdir(aws_dir):
             os.makedirs(aws_dir)
 
-        df = pd.read_csv(key_path, header=None)
-        (id_, key) = (df.iloc[0, 0].split("=")[1],
-                      df.iloc[1, 0].split("=")[1])
+        df = pd.read_csv(key_path)
+        if len(df.columns) == 1:
+            df = pd.read_csv(key_path, sep="=", index_col=0, header=None)
+            df = df.transpose()
+            df.columns = ["Access key ID", "Secret access key"]
+        id_ = df.iloc[0]["Access key ID"]
+        key = df.iloc[0]["Secret access key"]
 
         content = AWS_CREDENTIAL_TEXT
         content = content.replace("AWS_ACCESS_KEY_ID", id_)
