@@ -1,1 +1,13 @@
-**__
+*.Trash-1000
+*.DS_Store
+
+*.ipynb_checkpoints
+*__
+
+*.vscode
+
+gitfree/*
+!gitfree/.gitkeep
+
+data/*
+!data/.gitkeep
