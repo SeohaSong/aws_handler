@@ -1,6 +1,8 @@
 
+import time
+import sys
 import pandas as pd
-import pickle
+import asyncio
 import os
 
 import boto3
@@ -41,12 +43,39 @@ class S3():
         with open(aws_credential_path, "w") as f:
             f.write(content)
 
-    def get_key(self, key):
+    def get_key(self, key, signal=False, data=None):
         bucket_name = self._bucket_name
         s3 = self._s3
-        obj = s3.Object(bucket_name=bucket_name, key=key)
-        response = obj.get()
-        data = response['Body'].read()
+
+        def show_status(i=0):
+            nonlocal signal
+            nonlocal data
+            while True:
+                i += 1
+                time.sleep(0.5)
+                sys.stdout.write("\r[aws_handler] Loading .% -3s"%("."*(i%3)))
+                if signal:
+                    sys.stdout.write("\r[aws_handler] Loading complete\n")
+                    break
+
+        def get_data():
+            nonlocal signal
+            nonlocal data
+            obj = s3.Object(bucket_name=bucket_name, key=key)
+            response = obj.get()
+            data = response['Body'].read()
+            signal = True
+            
+        async def main():
+            futures = [
+                loop.run_in_executor(None, show_status),
+                loop.run_in_executor(None, get_data)
+            ]
+            await asyncio.wait(futures)
+
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(main())
+
         return data
 
     def put_key(self, key, filepath):
